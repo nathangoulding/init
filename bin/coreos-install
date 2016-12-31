@@ -26,7 +26,7 @@ fi
 : ${VERSION_ID:=current}
 CHANNEL_ID=${GROUP:-stable}
 
-ARCH="amd64"
+BOARD="amd64-usr"
 
 OEM_ID=
 if [[ -e /etc/oem-release ]]; then
@@ -38,7 +38,7 @@ USAGE="Usage: $0 [-V version] [-d /dev/device]
 Options:
     -d DEVICE   Install CoreOS to the given device.
     -V VERSION  Version to install (e.g. current) [default: ${VERSION_ID}]
-    -A ARCH     Desired CPU architecture [default: ${ARCH}]
+    -B BOARD    CoreOS board to use [default: ${BOARD}]
     -C CHANNEL  Release channel to use (e.g. beta) [default: ${CHANNEL_ID}]
     -o OEM      OEM type to install (e.g. ami) [default: ${OEM_ID:-(none)}]
     -c CLOUD    Insert a cloud-init config to be executed on boot.
@@ -288,11 +288,11 @@ K9w3EiyDrgzl0IpotQXxOBGHoCtcxUZvkNeOIxAb8QwkWnhgkljMyQ==
 DEVICE=""
 CLOUDINIT=""
 
-while getopts "V:A:C:d:o:c:i:t:b:nvh" OPTION
+while getopts "V:B:C:d:o:c:i:t:b:nvh" OPTION
 do
     case $OPTION in
         V) VERSION_ID="$OPTARG" ;;
-        A) ARCH="$OPTARG" ;;
+        B) BOARD="$OPTARG" ;;
         C) CHANNEL_ID="$OPTARG" ;;
         d) DEVICE="$OPTARG" ;;
         o) OEM_ID="$OPTARG" ;;
@@ -359,7 +359,7 @@ if [[ "${VERSION_ID}" =~ ^(alpha|beta|stable)$ ]]; then
 fi
 
 if [[ -z "${BASE_URL}" ]]; then
-    BASE_URL="https://${CHANNEL_ID}.release.core-os.net/${ARCH}-usr"
+    BASE_URL="https://${CHANNEL_ID}.release.core-os.net/${BOARD}"
 fi
 
 # if the version is "current", resolve the actual version number
