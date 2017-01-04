@@ -26,7 +26,12 @@ fi
 : ${VERSION_ID:=current}
 CHANNEL_ID=${GROUP:-stable}
 
-BOARD="amd64-usr"
+BOARD=$(cat /usr/share/coreos/release | \
+    gawk --field-separator '=' '/COREOS_RELEASE_BOARD=/ { print $2 }')
+
+if [ "${BOARD}" == "" ]; then
+    BOARD="amd64-usr"
+fi
 
 OEM_ID=
 if [[ -e /etc/oem-release ]]; then
@@ -45,7 +50,7 @@ Options:
     -i IGNITION Insert an Ignition config to be executed on boot.
     -t TMPDIR   Temporary location with enough space to download images.
     -v          Super verbose, for debugging.
-    -b BASEURL  URL to the image mirror
+    -b BASEURL  URL to the image mirror (overrides BOARD)
     -n          Copy generated network units to the root partition.
     -h          This ;-)
 
